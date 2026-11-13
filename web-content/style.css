@@ -1,0 +1,98 @@
+
+body
+{
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: black;
+
+    background-color: #544A4A;
+}
+.navbar ul 
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    display: flex;
+}
+.navbar li
+{
+    display: inline;
+    margin-right: 0px; 
+}
+.navbar a
+{
+    text-decoration: none;
+    padding: 10px;
+    padding: 10px 20px;
+    background-color: black;
+    color: #dc7954;
+    /* border: 1px solid black; */
+    margin: 0px;
+}
+
+.navbar a:hover
+{
+    background-color: #292828;
+}
+
+.navbar a.active
+{
+    background-color: #dc7954;
+    color: black;
+}
+
+.navbar
+{
+    background-color: black;
+    padding: 10px 0px;
+    margin: 0px;
+    display: flex;
+    width: fit-content;
+}
+
+p
+{
+    font-size: 20 px;
+}
+
+h1
+{
+    color: #dc7954;
+}
+
+h1
+{
+    font-size: 30 px;
+}
+
+h3
+{
+    font-size: 15 px;
+    color: #D1542C;
+}
+
+.demoTable, td
+{
+    border: 1px solid black;
+    padding: 10px;
+}
+
+.demoTable
+{
+    border-collapse: collapse;
+}
+
+td
+{
+    text-align: center;
+}
+
+.formTable td
+{
+    border: 0px;
+    text-align: left;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #dc7954;
+  color: white;
+}
