@@ -193,7 +193,65 @@ Then open `http://localhost:8081` and `http://localhost:8082` in a browser. Each
 
 ## 5. Resources
 
+- [docker/metadata-action (semver)](https://github.com/docker/metadata-action?tab=readme-ov-file#semver) - Used for the `type=semver` patterns that generate the major and major.minor tags.
+- [Docker Docs: Manage tags and labels](https://docs.docker.com/build/ci/github-actions/manage-tags-labels/) - Used to set up `docker/metadata-action` section so that the tags and labels are generated from the git tag.
+- [Docker Docs: CI with GitHub Actions](https://docs.docker.com/build/ci/github-actions/) - Used as the overall reference for building and pushing docker images from a workflow.
+- [build-push-action documentation](https://github.com/marketplace/actions/build-and-push-docker-images) - Used for the build and push step, including `platforms`, `tags` and `labels`.
+- [GitHub Docs: Publishing images to Docker Hub](https://docs.github.com/en/actions/tutorials/publish-packages/publish-docker-images#publishing-images-to-docker-hub) - Used for the login step and for storing the DockerHub credentials as repository secrets.
+- [git tag documentation](https://git-scm.com/docs/git-tag) - Used to create the version tags (`v1.0.0`, `v1.1.0`) that trigger the workflow.
+- [GitHub Actions workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax) - Used for the `on: push` branch and tag filters, with the `v*.*.*` pattern.
+
+### Latest action versions
+
+- [actions/checkout releases](https://github.com/actions/checkout/releases)
+- [docker/setup-buildx-action releases](https://github.com/docker/setup-buildx-action/releases)
+- [docker/login-action releases](https://github.com/docker/login-action/releases)
+- [docker/build-push-action releases](https://github.com/docker/build-push-action/releases)
+- [docker/metadata-action releases](https://github.com/docker/metadata-action/releases)
+
+Used Claude (Anthropic, Sonnet 5.5) to debug the Dockerfile COPY path and the arm64 “no matching manifest” error fixed with a multi-platform build.
+
 ## 6. Testing and Proof
+
+**1. Local run:** Shows the container running with a functional site
+
+![Local run](images/ci-01-dockerps.png)
+
+**2. Repository secrets:** Shows public GitHub Repo with a secret for both DOCKER_USERNAME and DOCKER_TOKEN
+
+![Repository secrets](images/ci-02-secrets.png)
+
+**3. Main trigger:** Proves a successful workflow run
+
+![Main trigger](images/ci-03-actionWorkflow.png)
+
+**4. Branch negative test:** Proves that pushing to a test branch does not trigger the workflow run
+
+![Branch negative test](images/ci-04-testBranch.png)
+
+**5. Change to image:** Shows a change made to the site after pushing to main and triggering the workflow
+
+![Change to image](images/ci-05-changesRebuild.png)
+
+**6. Tag trigger:** Version tag and it's succcessful workflow run
+
+![Tag trigger](images/ci-06-firstRelease.png)
+
+**7. Tag negative test:** Proves that when pushing a commmit without a version tag, no workflow run is triggered
+
+![Tag negative test](images/ci-07-pushNoTag.png)
+
+**8. Tag set:** Proves the build process is updating the DockerHub repository tags accordingly
+
+![Tag set](images/ci-08-tagSet.png)
+
+**9. Two releases:** DockerHub repository tags after a second release
+
+![Two releases](images/ci-09-twoReleases.png)
+
+**10. Rollback:** 2 release versions both live side by side, proving rollback is possible
+
+![Rollback](images/ci-10-rollback.png)
 
 
 
