@@ -55,3 +55,68 @@ My actual command to build this docker file was `docker build -t ryanmcgill18/ce
 Run `docker run -d --name site -p 8080:80 ryanmcgill18/ceg3120-ci:latest` and then open `http://localhost:8080` in a browser.
 
 **[ceg3120-ci](https://hub.docker.com/repository/docker/ryanmcgill18/ceg3120-ci/general) DockerHub Repository**
+
+
+## 3. GitHub Actions and DockerHub
+
+### Configuring repository secrets
+
+**Creating a PAT for GitHub Actions:**
+
+1. Navigate to [DockerHub](https://hub.docker.com) and under account settings open the Personal Access Token (PAT) setting. 
+2. Create a new PAT and give it a descriptive name to show what it is for (mine is GitHub-Secret-CI)
+3. Set the permissions scope (read and write is best for this project)
+4. Copy the PAT token
+
+**Setting the repository secrets:**
+
+1. In the GitHub repository open Settings, then Secrets and variables, then Actions
+2. Click "New repository secret"
+3. Enter the name and value of each secret and save it
+
+**Secrets set for this project:**
+
+- `DOCKER_USERNAME`: My DockerHub username (ryanmcgill18)
+- `DOCKER_TOKEN`: The PAT created for GitHub Actions
+
+### CI with GitHub Actions
+
+**Trigger:**
+
+The workflow runs when a commit is pushed to the `main` branch, and only `main`. Pushes to any other branch do not start it.
+
+**Steps:**
+
+1. **Checkout** (`actions/checkout`) copies the repository contents onto the runner so the `Dockerfile` and `web-content/` are available
+2. **Set up Docker Buildx** (`docker/setup-buildx-action`) sets up the builder, which is needed to build for more than one architechture platform 
+3. **Login to DockerHub** (`docker/login-action`) logs in using the two repository secrets
+4. **Build and push** (`docker/build-push-action`) builds the image from the `Dockerfile`, for both `linux/amd64` and `linux/arm64`, and pushes it to DockerHub as `latest`
+
+**What needs to be updated if this is used in another repository**
+
+In the workflow file:
+- `DOCKER_HUB_REPO` needs to be changed to the new DockerHub repository
+- The branch name changes if necessary 
+- The platforms line if other platforms are needed
+
+In the repository:
+- Secrets for `DOCKER_USERNAME` AND `DOCKER_TOKEN`
+- Docker file at repo root
+
+**Workflow file:** [`dockerPushWorkflow.yml`](https://github.com/WSU-kduncan/ceg3120-cicd-mcgill30-f26/blob/8a48670caec853157be2171bbe5ac087508bfb3b/.github/workflows/dockerPushWorkflow.yml)
+
+**To verify the image works when a container is run from it:**
+
+```
+docker pull ryanmcgill18/ceg3120-ci:latest
+docker run -d --name site -p 8080:80 ryanmcgill18/ceg3120-ci:latest
+```
+
+Then open `http://localhost:8080` in a browser.
+
+**[ceg3120-ci](https://hub.docker.com/repository/docker/ryanmcgill18/ceg3120-ci/general) DockerHub Repository**
+
+
+
+
+
