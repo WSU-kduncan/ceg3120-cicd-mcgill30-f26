@@ -10,9 +10,12 @@
 name: Docker-Login-Build-Push
 # event trigger(s)
 on:
-  # triggers on push to main branch
+  # triggers only for tags, no longer triggering with branch 
   push:
-    branches: [main] # Changed from master to main
+    # branches: [main] # Changed from master to main
+    tags:
+      - 'v*.*.*'
+
 # variables used in this workflow
 env:
   # variable holding my repo folder name (using DockerHub is assumed)
@@ -30,7 +33,17 @@ jobs:
         name: Checkout repo to runner
         uses: actions/checkout@v7 # Changed to most recent v7
 
-            # Buildx is needed to build for more than one platform (amd64 and arm64)
+      - 
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_HUB_REPO }}
+          tags: |
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      # Buildx is needed to build for more than one platform (amd64 and arm64)
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4 # Changed to most recent v4
@@ -53,6 +66,7 @@ jobs:
           platforms: linux/amd64,linux/arm64 # Added so the image also runs natively on Apple Silicon
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_HUB_REPO }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          lables: ${{ steps.meta.outputs.labels }}
           # Example getting fancy with tags: 
           #   https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md
