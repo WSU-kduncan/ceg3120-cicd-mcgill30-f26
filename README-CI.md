@@ -1,5 +1,11 @@
 ## 1. Project Description and Diagram
 
+### Overview
+
+### Diagram
+
+![CI project diagram](images/ci-11-diagram.png)
+
 ## 2. Building the web service container
 
 ### Web Content 
@@ -177,6 +183,25 @@ Then open `http://localhost:8081` and `http://localhost:8082` in a browser. Each
 ## 5. Resources
 
 ## 6. Testing and Proof
+
+```mermaid
+flowchart LR
+    subgraph local["Local clone"]
+        A["Edit site, commit,<br/>create version tag"] --> B["git push<br/>(commit and tag)"]
+    end
+
+    subgraph github["GitHub"]
+        C["Repository"] --> D["GitHub Actions workflow<br/>(runs on a version tag)"]
+        S["Repository secrets"] -.-> D
+    end
+
+    subgraph dockerhub["DockerHub"]
+        E["Image tags:<br/>latest, 1, 1.0"]
+    end
+
+    B --> C
+    D -->|"build and push image"| E
+```
 
 
 
