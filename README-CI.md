@@ -2,6 +2,17 @@
 
 ### Overview
 
+The goal of this project is to automate the building and publishing of a container image for a website. When you push a version tag to GitHub, this triggers a GitHub Actions workflow that builds the Docker image and pushes it to a public DockerHub repository. Each release gets its own version tags, so a new release does not overwrite the previous one and it can be rolled back to an earlier version of the site.
+
+**Tools:**
+
+- Git: Tracks the changes in the local clone and creates version tags
+- GitHub: Stores the repository, keeps DockerHub credentials as repo secrets, and runs the action workflow
+- GitHub Actions: Runs the workflow to complete the DockerHub login, image build, and pushing it with version tags
+- Docker: Builds the image and runs containers
+- Apache `httpd:2.4`: Base image that serves the site from inside a container
+- DockerHub: Public repository that stores the image and its tags
+
 ### Diagram
 
 ![CI project diagram](images/ci-11-diagram.png)
@@ -183,25 +194,6 @@ Then open `http://localhost:8081` and `http://localhost:8082` in a browser. Each
 ## 5. Resources
 
 ## 6. Testing and Proof
-
-```mermaid
-flowchart LR
-    subgraph local["Local clone"]
-        A["Edit site, commit,<br/>create version tag"] --> B["git push<br/>(commit and tag)"]
-    end
-
-    subgraph github["GitHub"]
-        C["Repository"] --> D["GitHub Actions workflow<br/>(runs on a version tag)"]
-        S["Repository secrets"] -.-> D
-    end
-
-    subgraph dockerhub["DockerHub"]
-        E["Image tags:<br/>latest, 1, 1.0"]
-    end
-
-    B --> C
-    D -->|"build and push image"| E
-```
 
 
 
