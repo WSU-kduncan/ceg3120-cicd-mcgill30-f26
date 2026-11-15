@@ -30,7 +30,10 @@ jobs:
         name: Checkout repo to runner
         uses: actions/checkout@v7 # Changed to most recent v7
 
-      # Sample workflow to setup buildx was removed, as it is no longer needed
+            # Buildx is needed to build for more than one platform (amd64 and arm64)
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4 # Changed to most recent v4
 
       # Login in to DockerHub, credentials stored as GitHub repository secrets
       #    Usage documentation: https://github.com/marketplace/actions/docker-login
@@ -47,6 +50,7 @@ jobs:
         id: docker_build 
         uses: docker/build-push-action@v7 # Changed to most recent v7 
         with:
+          platforms: linux/amd64,linux/arm64 # Added so the image also runs natively on Apple Silicon
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_HUB_REPO }}:latest
